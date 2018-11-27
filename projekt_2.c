@@ -32,27 +32,28 @@ return zaznamy;
 
 //**************************************************************//
 
-void vytvorit(FILE *subor, ZAZNAM *prvy, int *p)
+void vytvorit(FILE *subor, ZAZNAM **prvy, int *p)
 {
-ZAZNAM *aktualny;
-ZAZNAM *temp;
+ZAZNAM *aktualny = NULL;
+ZAZNAM *temp = NULL;
 int i,val;
 char buff[201];
 subor = fopen("auta.txt", "r"); //otvori subor
 int pocet = pocet_zaznamov(subor);
-p= &pocet;
+*p= pocet;
 if (subor == NULL)
     printf("Zaznamy neboli nacitane\n");
   else
     printf("Nacitalo sa %d zaznamov\n",pocet);
-if (prvy != NULL) free(aktualny);
-prvy = (ZAZNAM*) malloc(sizeof(ZAZNAM));
+if (*prvy != NULL) free(*prvy);
+*prvy = (ZAZNAM*) malloc(sizeof(ZAZNAM));
 aktualny = (ZAZNAM*) malloc(sizeof(ZAZNAM));
 temp = (ZAZNAM*) malloc(sizeof(ZAZNAM));
-aktualny = NULL;
-prvy = NULL;
+//aktualny = NULL;
+//prvy = NULL;
  for(i=0; i<*p;i++)
  {
+   temp = (ZAZNAM*) malloc(sizeof(ZAZNAM));
    fgets(buff, 51, (FILE* )subor);
    fgets(buff, 51, (FILE* )subor);
    buff[strlen(buff)-1]='\0';
@@ -72,62 +73,68 @@ prvy = NULL;
    fgets(buff, 201, (FILE* )subor);
    buff[strlen(buff)-1]='\0';
    strncpy(temp->stav, buff,200);
-   temp->dalsi = NULL;
+   //temp->dalsi = NULL;
    if (prvy == NULL)
    {
-     prvy = temp;
-     //aktualny = temp;
-     //aktualny->dalsi = NULL;
+     *prvy = temp;
    }
    else
     {
-      aktualny = prvy;
+      aktualny = *prvy;
       while(aktualny->dalsi != NULL)
           aktualny = aktualny->dalsi;
       aktualny->dalsi = temp;
     }
-   printf("%s\n",aktualny->kategoria);
-   printf("%s\n",aktualny->znacka);
-   printf("%s\n",aktualny->predajca);
-   printf("%d\n",aktualny->cena);
-   printf("%d\n",aktualny->rok_vyroby);
-   printf("%s\n",aktualny->stav);
-   //aktualny = nasledujuci;
  }
- free(prvy);
+aktualny = *prvy;
+i=1;
+ while (aktualny != NULL)
+    {
+      printf("%d\n",i++);
+      printf("kategoria: %s\n",aktualny->kategoria);
+      printf("znacka: %s\n",aktualny->znacka);
+      printf("predajca: %s\n",aktualny->predajca);
+      printf("cena: %d\n",aktualny->cena);
+      printf("rok_vyroby: %d\n",aktualny->rok_vyroby);
+      printf("stav_vozidla: %s\n",aktualny->stav);
+      aktualny = aktualny->dalsi;
+    }
 }
 
 //*******************************************************************//
 
-void vypis(ZAZNAM *prvy,int *p)
+void vypis(ZAZNAM **prvy,int *p)
 {
   int i;
   ZAZNAM *aktualny;
-  aktualny = prvy;
-for(i=0;i<*p;i++)
-  {
-    if (aktualny != NULL)
+  aktualny = (ZAZNAM*) malloc(sizeof(ZAZNAM));
+  aktualny = *prvy;
+  i=1;
+   while (aktualny != NULL)
       {
-        printf("%s\n",aktualny->kategoria);
-        printf("%s\n",aktualny->znacka);
-        printf("%s\n",aktualny->predajca);
-        printf("%d\n",aktualny->cena);
-        printf("%d\n",aktualny->rok_vyroby);
-        printf("%s\n",aktualny->stav);
+        printf("%d\n",i++);
+        printf("kategoria: %s\n",aktualny->kategoria);
+        printf("znacka: %s\n",aktualny->znacka);
+        printf("predajca: %s\n",aktualny->predajca);
+        printf("cena: %d\n",aktualny->cena);
+        printf("rok_vyroby: %d\n",aktualny->rok_vyroby);
+        printf("stav_vozidla: %s\n",aktualny->stav);
         aktualny = aktualny->dalsi;
       }
-  }
+
 }
 
 //*******************************************************************//
 
 int main() {
-  ZAZNAM *prvy=NULL;
+  ZAZNAM *prvy = NULL;
   char vyber;
-  int *p = NULL;
+  int *p,pocet;
   FILE *subor = NULL;
-  vytvorit(subor,prvy, p);
-  vypis(prvy,p);
+  p = &pocet;
+  vytvorit(subor,&prvy, p);
+  free(prvy);
+  //vypis(&prvy,p);
   /*while(1) //nekonecny cyklus, ukonci sa zadanim K
   {
 vyber=getchar();//nacitanie volby funkcie od uzivatela
