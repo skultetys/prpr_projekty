@@ -43,8 +43,6 @@ int pocet = pocet_zaznamov(subor);
 *p= pocet;
 if (subor == NULL)
     printf("Zaznamy neboli nacitane\n");
-  else
-    printf("Nacitalo sa %d zaznamov\n",pocet);
 if (*prvy != NULL) free(*prvy);
 *prvy = (ZAZNAM*) malloc(sizeof(ZAZNAM));
 aktualny = (ZAZNAM*) malloc(sizeof(ZAZNAM));
@@ -108,19 +106,7 @@ strncpy(temp->stav, buff,200);
       aktualny->dalsi = temp;
     }
  }
-aktualny = *prvy;
-i=1;
- while (aktualny != NULL)
-    {
-      printf("%d\n",i++);
-      printf("kategoria: %s\n",aktualny->kategoria);
-      printf("znacka: %s\n",aktualny->znacka);
-      printf("predajca: %s\n",aktualny->predajca);
-      printf("cena: %d\n",aktualny->cena);
-      printf("rok_vyroby: %d\n",aktualny->rok_vyroby);
-      printf("stav_vozidla: %s\n",aktualny->stav);
-      aktualny = aktualny->dalsi;
-    }
+   printf("Nacitalo sa %d zaznamov\n",pocet);
 }
 
 //*******************************************************************//
@@ -148,6 +134,68 @@ void vypis(ZAZNAM **prvy,int *p)
 
 //*******************************************************************//
 
+void vlozit(ZAZNAM **prvy,int *p)
+{
+  int k, val,i;
+  char buff[201];
+  ZAZNAM *aktualny, *temp;
+  aktualny = (ZAZNAM*) malloc(sizeof(ZAZNAM));
+  temp = (ZAZNAM*) malloc(sizeof(ZAZNAM));
+  scanf("%d",&k);
+  aktualny = *prvy;
+  temp = (ZAZNAM*) malloc(sizeof(ZAZNAM));
+  fgets(buff, 51, stdin);
+  fgets(buff, 51, stdin);
+  buff[strlen(buff)-1]='\0';
+  strncpy(temp->kategoria, buff,50);
+  fgets(buff, 51, stdin);
+  buff[strlen(buff)-1]='\0';
+  strncpy(temp->znacka, buff,50);
+  fgets(buff, 101, stdin);
+  buff[strlen(buff)-1]='\0';
+  strncpy(temp->predajca, buff,100);
+  fgets(buff, 51, stdin);
+  val = atoi(buff);
+  temp->cena = val;
+  fgets(buff, 51, stdin);
+  val = atoi(buff);
+  temp->rok_vyroby = val;
+  fgets(buff, 201, stdin);
+  buff[strlen(buff)-1]='\0';
+  strncpy(temp->stav, buff,200);
+
+  if(k>*p)
+      while(aktualny->dalsi != NULL)
+        {
+          aktualny = aktualny->dalsi;
+          aktualny->dalsi = temp;
+        }
+  else
+      {
+      if (k == 1)
+        {
+          temp->dalsi = aktualny;
+          aktualny = temp;
+          *prvy = aktualny;
+        }
+      else
+        {
+        for(i=1;i<k-1;i++)
+          {
+          aktualny = aktualny->dalsi;
+          }
+        temp->dalsi = aktualny->dalsi;
+        aktualny->dalsi = temp;
+        }
+      }
+
+}
+
+//*******************************************************************//
+
+
+//******************************************************************//
+
 int main() {
   ZAZNAM *prvy = NULL;
   char vyber;
@@ -155,8 +203,9 @@ int main() {
   FILE *subor = NULL;
   p = &pocet;
   vytvorit(subor,&prvy, p);
+  vlozit(&prvy, p);
+  vypis(&prvy,p);
   free(prvy);
-  //vypis(&prvy,p);
   /*while(1) //nekonecny cyklus, ukonci sa zadanim K
   {
 vyber=getchar();//nacitanie volby funkcie od uzivatela
