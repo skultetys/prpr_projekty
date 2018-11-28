@@ -49,9 +49,31 @@ if (*prvy != NULL) free(*prvy);
 *prvy = (ZAZNAM*) malloc(sizeof(ZAZNAM));
 aktualny = (ZAZNAM*) malloc(sizeof(ZAZNAM));
 temp = (ZAZNAM*) malloc(sizeof(ZAZNAM));
+
+
+fgets(buff, 51, (FILE* )subor);
+fgets(buff, 51, (FILE* )subor);
+buff[strlen(buff)-1]='\0';
+strncpy(temp->kategoria, buff,50);
+fgets(buff, 51, (FILE* )subor);
+buff[strlen(buff)-1]='\0';
+strncpy(temp->znacka, buff,50);
+fgets(buff, 101, (FILE* )subor);
+buff[strlen(buff)-1]='\0';
+strncpy(temp->predajca, buff,100);
+fgets(buff, 51, (FILE* )subor);
+val = atoi(buff);
+temp->cena = val;
+fgets(buff, 51, (FILE* )subor);
+val = atoi(buff);
+temp->rok_vyroby = val;
+fgets(buff, 201, (FILE* )subor);
+buff[strlen(buff)-1]='\0';
+strncpy(temp->stav, buff,200);
+*prvy = temp;
 //aktualny = NULL;
 //prvy = NULL;
- for(i=0; i<*p;i++)
+ for(i=0; i<*p-1;i++)
  {
    temp = (ZAZNAM*) malloc(sizeof(ZAZNAM));
    fgets(buff, 51, (FILE* )subor);
